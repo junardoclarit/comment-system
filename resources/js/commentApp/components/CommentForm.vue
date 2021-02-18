@@ -1,6 +1,6 @@
 <template>
     <div v-if="reply_is_clicked" class="rounded border p-5 bg-gray-100 mb-3">
-        <ValidationObserver v-slot="{ handleSubmit, reset }">
+        <ValidationObserver ref="observer" v-slot="{ handleSubmit, reset }">
             <form @submit.prevent="handleSubmit(onSubmit)" @reset.prevent="reset">
                 <div class="form-group flex items-start">
                     <label for="name" class="text-sm uppercase mr-2 w-28">Name:</label>
@@ -88,6 +88,11 @@ export default {
                 comment: null,
                 avatar: null,
             }
+
+            // You should call it on the next frame
+            requestAnimationFrame(() => {
+                this.$refs.observer.reset();
+            });
         },
         async onSubmit() {
             this.isSaving = true;
@@ -102,8 +107,6 @@ export default {
             if(this.parent_id) {
                 this.$emit('cancelClicked');
             }
-
-            console.log(this);
         },
     },
     mounted() {
